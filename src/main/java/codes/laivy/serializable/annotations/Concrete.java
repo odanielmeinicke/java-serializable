@@ -89,5 +89,5 @@ public @interface Concrete {
      *
      * @return The concrete class for serialization. Guaranteed to be non-null.
      */
-    @NotNull Class<?> type();
+    @NotNull Class<?> value();
 }

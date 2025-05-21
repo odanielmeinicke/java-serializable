@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
-@Concrete(type = MapContextImpl.class)
+@Concrete(value = MapContextImpl.class)
 public interface MapContext extends Context {
 
     // Static initializers

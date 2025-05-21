@@ -25,7 +25,7 @@ public final class CollectionTest {
 
         private static final @NotNull List<String> REFERENCE = Arrays.asList("a", "b", "c");
 
-        @Concrete(type = ArrayList.class)
+        @Concrete(value = ArrayList.class)
         private final @NotNull List<String> arrays = REFERENCE;
         private final @NotNull ArrayList<String> array = new ArrayList<>(REFERENCE);
         private final @NotNull LinkedList<String> linked = new LinkedList<>(REFERENCE);

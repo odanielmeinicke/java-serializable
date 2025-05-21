@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 // todo: writeAll
-@Concrete(type = ArrayContextImpl.class)
+@Concrete(value = ArrayContextImpl.class)
 public interface ArrayContext extends Context, Collection<Context> {
 
     // Static initializers

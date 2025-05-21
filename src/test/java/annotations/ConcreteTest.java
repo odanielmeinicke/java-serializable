@@ -47,8 +47,8 @@ public final class ConcreteTest {
 
     // Classes
 
-    @Concrete(type = Female.class)
-    @Concrete(type = Male.class)
+    @Concrete(value = Female.class)
+    @Concrete(value = Male.class)
     // Let's suppose that class is sealed
     private static abstract class Gender {
     }
@@ -98,7 +98,7 @@ public final class ConcreteTest {
 
     private static final class Normal {
 
-        @Concrete(type = HashSet.class)
+        @Concrete(value = HashSet.class)
         private final @NotNull Set<String> set;
 
         private Normal() {
@@ -120,8 +120,8 @@ public final class ConcreteTest {
     }
     private static final class Generic {
 
-        @Concrete(type = HashSet.class)
-        private final @NotNull Set<@Concrete(type = Dog.class) @Concrete(type = Cat.class) Animal> set;
+        @Concrete(value = HashSet.class)
+        private final @NotNull Set<@Concrete(value = Dog.class) @Concrete(value = Cat.class) Animal> set;
 
         private Generic() {
             this.set = new HashSet<>();

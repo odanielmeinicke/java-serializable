@@ -53,9 +53,9 @@ public final class Classes {
                 if (type instanceof Class && isConcrete((Class<?>) type)) {
                     genericConcretes.get(type).add((Class<?>) type);
                 } if (annotated.isAnnotationPresent(Concrete.class)) {
-                    genericConcretes.get(type).add(annotated.getAnnotation(Concrete.class).type());
+                    genericConcretes.get(type).add(annotated.getAnnotation(Concrete.class).value());
                 } if (annotated.isAnnotationPresent(Concretes.class)) {
-                    genericConcretes.get(type).addAll(Arrays.stream(annotated.getAnnotationsByType(Concretes.class)).flatMap(concretes -> Arrays.stream(concretes.value())).map(Concrete::type).collect(Collectors.toList()));
+                    genericConcretes.get(type).addAll(Arrays.stream(annotated.getAnnotationsByType(Concretes.class)).flatMap(concretes -> Arrays.stream(concretes.value())).map(Concrete::value).collect(Collectors.toList()));
                 }
             }
         } finally {
@@ -142,9 +142,9 @@ public final class Classes {
         references.add(reference);
 
         if (reference.isAnnotationPresent(Concretes.class)) {
-            references.addAll(Arrays.stream(reference.getAnnotationsByType(Concretes.class)).flatMap(c -> Arrays.stream(c.value())).map(Concrete::type).collect(Collectors.toList()));
+            references.addAll(Arrays.stream(reference.getAnnotationsByType(Concretes.class)).flatMap(c -> Arrays.stream(c.value())).map(Concrete::value).collect(Collectors.toList()));
         } if (reference.isAnnotationPresent(Concrete.class)) {
-            references.addAll(Arrays.stream(reference.getAnnotationsByType(Concrete.class)).map(Concrete::type).collect(Collectors.toList()));
+            references.addAll(Arrays.stream(reference.getAnnotationsByType(Concrete.class)).map(Concrete::value).collect(Collectors.toList()));
         }
 
         for (@NotNull Class<?> temp : references) {
@@ -162,9 +162,9 @@ public final class Classes {
             classes.add(field.getType());
 
             if (field.isAnnotationPresent(Concretes.class)) {
-                classes.addAll(Arrays.stream(field.getAnnotationsByType(Concretes.class)).flatMap(c -> Arrays.stream(c.value())).map(Concrete::type).collect(Collectors.toList()));
+                classes.addAll(Arrays.stream(field.getAnnotationsByType(Concretes.class)).flatMap(c -> Arrays.stream(c.value())).map(Concrete::value).collect(Collectors.toList()));
             } if (field.isAnnotationPresent(Concrete.class)) {
-                classes.addAll(Arrays.stream(field.getAnnotationsByType(Concrete.class)).map(Concrete::type).collect(Collectors.toList()));
+                classes.addAll(Arrays.stream(field.getAnnotationsByType(Concrete.class)).map(Concrete::value).collect(Collectors.toList()));
             }
         } else {
             classes.addAll(Classes.getReferences(field.getType()));
@@ -199,7 +199,7 @@ public final class Classes {
                 // Known as variable
                 if (field.isAnnotationPresent(KnownAs.class)) {
                     @NotNull KnownAs known = field.getAnnotation(KnownAs.class);
-                    name = known.name();
+                    name = known.value();
 
                     if (map.containsKey(name)) {
                         throw new IllegalStateException("there's two or more fields with the same @KnownAs name at the class '" + reference + "', check it's super classes.");

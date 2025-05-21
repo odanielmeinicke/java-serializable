@@ -37,19 +37,19 @@ import codes.laivy.serializable.annotations.KnownAs;
 
 public final class User {
 
-    @KnownAs(name = "user_name") // Optional annotation
+    @KnownAs(value = "user_name") // Optional annotation
     private final String name;
-    
+
     private final int age;
-    
+
     private final transient String data; // This data will be ignored, it's transient!
 
     // Constructors, getters, and setters
-    
+
     public String toString() {
         return "User{name='" + name + "',age=" + age + "}";
     }
-    
+
 }
 ```
 

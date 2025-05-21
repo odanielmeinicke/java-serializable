@@ -38,10 +38,10 @@ public final class KnownAsTest {
     @SuppressWarnings("FieldCanBeLocal")
     private static final class Cool {
 
-        @KnownAs(name = "name")
+        @KnownAs(value = "name")
         private final @NotNull String daiwdnaidn;
 
-        @KnownAs(name = "age")
+        @KnownAs(value = "age")
         private final int daifjaiwjd;
 
         private final int without = -1;
@@ -55,9 +55,9 @@ public final class KnownAsTest {
     @SuppressWarnings("FieldCanBeLocal")
     private static final class MultiplesWithSameName {
 
-        @KnownAs(name = "name")
+        @KnownAs(value = "name")
         private final @NotNull String name_1;
-        @KnownAs(name = "name")
+        @KnownAs(value = "name")
         private final @NotNull String name_2;
 
         private MultiplesWithSameName(@NotNull String name_1, @NotNull String name_2) {

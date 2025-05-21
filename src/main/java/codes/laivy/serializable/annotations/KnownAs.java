@@ -31,6 +31,6 @@ public @interface KnownAs {
      *
      * @return the name to use for serialization
      */
-    @NotNull String name();
+    @NotNull String value();
 
 }

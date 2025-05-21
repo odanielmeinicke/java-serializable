@@ -3,10 +3,10 @@ package codes.laivy.serializable.context;
 import codes.laivy.serializable.annotations.Concrete;
 import org.jetbrains.annotations.NotNull;
 
-@Concrete(type = ArrayContextImpl.class)
-@Concrete(type = MapContextImpl.class)
-@Concrete(type = NullContextImpl.class)
-@Concrete(type = PrimitiveContextImpl.class)
+@Concrete(value = ArrayContextImpl.class)
+@Concrete(value = MapContextImpl.class)
+@Concrete(value = NullContextImpl.class)
+@Concrete(value = PrimitiveContextImpl.class)
 public interface Context {
 
     // Object

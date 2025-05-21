@@ -44,9 +44,9 @@ public final class MethodsContextFactory implements ContextFactory {
         }
 
         if (parameter.isAnnotationPresent(Concrete.class)) {
-            set.addAll(Arrays.stream(parameter.getAnnotationsByType(Concrete.class)).map(Concrete::type).collect(Collectors.toList()));
+            set.addAll(Arrays.stream(parameter.getAnnotationsByType(Concrete.class)).map(Concrete::value).collect(Collectors.toList()));
         } if (parameter.isAnnotationPresent(Concretes.class)) {
-            set.addAll(Arrays.stream(parameter.getAnnotationsByType(Concretes.class)).flatMap(array -> Arrays.stream(array.value())).map(Concrete::type).collect(Collectors.toList()));
+            set.addAll(Arrays.stream(parameter.getAnnotationsByType(Concretes.class)).flatMap(array -> Arrays.stream(array.value())).map(Concrete::value).collect(Collectors.toList()));
         }
 
         for (@NotNull Class<?> reference : set) {
