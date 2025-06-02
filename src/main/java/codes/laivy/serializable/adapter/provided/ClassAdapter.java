@@ -1,19 +1,21 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.Context;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 
-public final class ClassAdapter implements Adapter {
+public final class ClassAdapter extends ReferenceAdapter {
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] { Class.class };
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Collections.singletonList(Class.class);
     }
 
     @Override

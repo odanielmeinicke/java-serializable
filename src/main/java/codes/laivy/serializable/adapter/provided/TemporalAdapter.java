@@ -1,7 +1,7 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.Context;
 import codes.laivy.serializable.context.PrimitiveContext;
@@ -10,13 +10,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
 import java.time.*;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
-public final class TemporalAdapter implements Adapter {
+public final class TemporalAdapter extends ReferenceAdapter {
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] {
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Arrays.asList(
                 Date.class,
                 Duration.class,
                 Instant.class,
@@ -30,7 +32,7 @@ public final class TemporalAdapter implements Adapter {
                 YearMonth.class,
                 ZoneId.class,
                 ZoneOffset.class
-        };
+        );
     }
 
     @Override

@@ -1,7 +1,7 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.ArrayContext;
 import codes.laivy.serializable.context.Context;
@@ -12,16 +12,17 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.io.EOFException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
-public final class CharacterArrayAdapter implements Adapter {
+public final class CharacterArrayAdapter extends ReferenceAdapter {
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] {
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Arrays.asList(
                 Character[].class,
                 char[].class
-        };
+        );
     }
 
     @Override

@@ -1,7 +1,7 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.ArrayContext;
 import codes.laivy.serializable.context.Context;
@@ -21,11 +21,11 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 // todo: CharSequence
-public final class MapAdapter implements Adapter {
+public final class MapAdapter extends ReferenceAdapter {
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] {
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Arrays.asList(
                 Map.class,
                 AbstractMap.class,
 
@@ -40,7 +40,7 @@ public final class MapAdapter implements Adapter {
                 TreeMap.class,
                 UIDefaults.class,
                 WeakHashMap.class
-        };
+        );
     }
 
     @Override
@@ -144,8 +144,8 @@ public final class MapAdapter implements Adapter {
                 for (@NotNull Context temp : array) {
                     @NotNull MapContext map = temp.getAsMap();
 
-                    @NotNull Class<?> @NotNull [] keys = config.getGenerics(object.getClass().getGenericInterfaces()[0]).toArray(new Class[0]);
-                    @NotNull Class<?> @NotNull [] values = config.getGenerics(object.getClass().getGenericInterfaces()[1]).toArray(new Class[0]);
+                    @NotNull Collection<@NotNull Class<?>> keys = config.getGenerics(object.getClass().getGenericInterfaces()[0]);
+                    @NotNull Collection<@NotNull Class<?>> values = config.getGenerics(object.getClass().getGenericInterfaces()[1]);
 
                     @Nullable Object key;
                     @Nullable Object value;
@@ -158,7 +158,7 @@ public final class MapAdapter implements Adapter {
                         } catch (@NotNull IncompatibleReferenceException | @NotNull IllegalConcreteTypeException ignore) {
                         }
 
-                        throw new IncompatibleReferenceException("there's no compatible references '" + Arrays.toString(keys) + "' to deserialize map key element: " + map.getContext("key"));
+                        throw new IncompatibleReferenceException("there's no compatible references '" + keys + "' to deserialize map key element: " + map.getContext("key"));
                     }
 
                     valueBlock:
@@ -169,7 +169,7 @@ public final class MapAdapter implements Adapter {
                         } catch (@NotNull IncompatibleReferenceException | @NotNull IllegalConcreteTypeException ignore) {
                         }
 
-                        throw new IncompatibleReferenceException("there's no compatible references '" + Arrays.toString(values) + "' to deserialize map value element: " + map.getContext("value"));
+                        throw new IncompatibleReferenceException("there's no compatible references '" + values + "' to deserialize map value element: " + map.getContext("value"));
                     }
 
                     object.put(key, value);

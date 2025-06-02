@@ -217,14 +217,9 @@ public final class NativeContextFactory implements ContextFactory {
                     }
                 }
 
-                // Process fields
-                fields:
-                for (@NotNull String name : object.keySet()) {
-                    @Nullable Field field = fields.getOrDefault(name, null);
-
-                    if (field == null) {
-                        throw new IncompatibleReferenceException("there's no field with name '" + name + "' at class '" + reference.getName() + "': " + config);
-                    } else if (field.isAnnotationPresent(Parent.class)) {
+                // Parent fields
+                for (@NotNull Field field : fields.values()) {
+                    if (field.isAnnotationPresent(Parent.class)) {
                         @NotNull Class<?> type = field.getType();
 
                         if (father == null) {
@@ -235,6 +230,16 @@ public final class NativeContextFactory implements ContextFactory {
 
                         // Set parent field to object instance
                         Allocator.setFieldValue(field, instance, father.getInstance());
+                    }
+                }
+
+                // Process fields
+                fields:
+                for (@NotNull String name : object.keySet()) {
+                    @Nullable Field field = fields.getOrDefault(name, null);
+
+                    if (field == null) {
+                        throw new IncompatibleReferenceException("there's no field with name '" + name + "' at class '" + reference.getName() + "': " + config);
                     } else if (object.getContext(name).isNull()) {
                         // Set outer field instance
                         Allocator.setFieldValue(field, instance, null);

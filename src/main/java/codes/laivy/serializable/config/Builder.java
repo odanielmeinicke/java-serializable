@@ -124,13 +124,7 @@ public final class Builder {
         }
 
         // Adapter
-        @Nullable Adapter adapter;
-
-        if (!typeConcretes.isEmpty()) {
-            adapter = serializer.getAdapter(typeConcretes.stream().findFirst().orElseThrow(NullPointerException::new)).orElse(null);
-        } else {
-            adapter = serializer.getAdapter(field.getType()).orElse(null);
-        }
+        @Nullable Adapter adapter = serializer.getAdapter(typeConcretes.stream().findFirst().orElseThrow(NullPointerException::new)).orElse(null);
 
         // Fields
         @NotNull Set<Field> includedFields = new LinkedHashSet<>(getFields(father, enclosing).values());
@@ -168,7 +162,7 @@ public final class Builder {
     // Modules
 
     @Contract(value = "_->this")
-    public @NotNull Builder father(@NotNull Father father) {
+    public @NotNull Builder father(@Nullable Father father) {
         this.father = father;
         return this;
     }

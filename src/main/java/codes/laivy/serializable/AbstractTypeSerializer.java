@@ -1,6 +1,7 @@
 package codes.laivy.serializable;
 
 import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.adapter.provided.*;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.Context;
@@ -10,12 +11,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractTypeSerializer<T> implements TypeSerializer<T> {
 
     // Object
 
-    protected final @NotNull AdapterMapList adapters = new AdapterMapList();
+    protected final @NotNull Set<Adapter> adapters = new LinkedHashSet<>();
 
     public AbstractTypeSerializer() {
         @NotNull Adapter[] adapters = new Adapter[]{
@@ -28,11 +30,7 @@ public abstract class AbstractTypeSerializer<T> implements TypeSerializer<T> {
                 new ClassAdapter()
         };
 
-        for (@NotNull Adapter adapter : adapters) {
-            for (@NotNull Class<?> reference : adapter.getReferences()) {
-                this.adapters.map.put(reference, adapter);
-            }
-        }
+        this.adapters.addAll(Arrays.asList(adapters));
     }
 
     // Adapters
@@ -43,7 +41,19 @@ public abstract class AbstractTypeSerializer<T> implements TypeSerializer<T> {
     }
     @Override
     public @NotNull Optional<Adapter> getAdapter(@NotNull Class<?> reference) {
-        return Optional.ofNullable(adapters.map.getOrDefault(reference, null));
+        @NotNull List<Adapter> adapters = this.adapters.stream().filter(adapter -> {
+            if (adapter instanceof ReferenceAdapter) {
+                return ((ReferenceAdapter) adapter).getReferences().contains(reference);
+            } else {
+                return adapter.isAssignableFrom(reference);
+            }
+        }).collect(Collectors.toList());
+
+        if (adapters.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(adapters.get(adapters.size() - 1));
+        }
     }
 
     // Serializable
@@ -577,45 +587,6 @@ public abstract class AbstractTypeSerializer<T> implements TypeSerializer<T> {
     @Override
     public @NotNull Context toContext(@Nullable Object object) {
         return toContext(object, object != null ? Config.builder(this, object.getClass()).build() : Config.builder().build());
-    }
-
-    // Classes
-
-    protected static final class AdapterMapList extends AbstractList<Adapter> {
-
-        public final @NotNull Map<Class<?>, Adapter> map = new HashMap<>();
-
-        @Override
-        public @NotNull Adapter get(int index) {
-            return map.values().stream().skip(index).findFirst().orElseThrow(IndexOutOfBoundsException::new);
-        }
-        @Override
-        public int size() {
-            return map.size();
-        }
-
-        @Override
-        public void add(int index, @Nullable Adapter adapter) {
-            if (adapter == null) {
-                throw new IllegalArgumentException("cannot add a null adapter");
-            }
-
-            for (@NotNull Class<?> reference : adapter.getReferences()) {
-                map.put(reference, adapter);
-            }
-        }
-        @Override
-        public @NotNull Adapter remove(int index) {
-            @NotNull Adapter adapter = get(index);
-
-            for (@NotNull Map.Entry<Class<?>, Adapter> entry : new HashMap<>(map).entrySet()) {
-                if (entry.getValue() == adapter) {
-                    map.remove(entry.getKey());
-                }
-            }
-
-            return adapter;
-        }
     }
 
 }

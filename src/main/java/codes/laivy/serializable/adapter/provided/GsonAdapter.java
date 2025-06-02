@@ -1,7 +1,7 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.*;
 import com.google.gson.*;
@@ -9,19 +9,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.EOFException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 
-public final class GsonAdapter implements Adapter {
+public final class GsonAdapter extends ReferenceAdapter {
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] {
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Arrays.asList(
                 JsonObject.class,
                 JsonPrimitive.class,
                 JsonArray.class,
                 JsonNull.class
-        };
+        );
     }
 
     @Override
