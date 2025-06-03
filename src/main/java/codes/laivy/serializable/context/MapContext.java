@@ -37,7 +37,11 @@ public interface MapContext extends Context {
         return getObject(reference, name, Config.builder(getSerializer(), reference).build());
     }
     default <E> @Nullable E getObject(@NotNull Class<E> reference, @NotNull String name, @NotNull Config config) {
-        return getSerializer().deserialize(reference, getContext(name), config);
+        if (contains(name)) {
+            return getSerializer().deserialize(reference, getContext(name), config);
+        } else {
+            return null;
+        }
     }
 
     @Nullable Context remove(@NotNull String name);
