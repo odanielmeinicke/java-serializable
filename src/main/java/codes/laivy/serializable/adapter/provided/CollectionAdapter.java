@@ -1,7 +1,7 @@
 package codes.laivy.serializable.adapter.provided;
 
 import codes.laivy.serializable.Serializer;
-import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.adapter.ReferenceAdapter;
 import codes.laivy.serializable.config.Config;
 import codes.laivy.serializable.context.ArrayContext;
 import codes.laivy.serializable.context.Context;
@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Consumer;
 
-public final class CollectionAdapter implements Adapter {
+public final class CollectionAdapter extends ReferenceAdapter {
 
     public static final @NotNull Class<?> ARRAYS_ARRAYLIST;
 
@@ -32,8 +32,8 @@ public final class CollectionAdapter implements Adapter {
     }
 
     @Override
-    public @NotNull Class<?> @NotNull [] getReferences() {
-        return new Class[] {
+    public @NotNull Collection<@NotNull Class<?>> getReferences() {
+        return Arrays.asList(
                 Collection.class,
                 List.class,
                 Set.class,
@@ -53,7 +53,7 @@ public final class CollectionAdapter implements Adapter {
                 HashSet.class,
                 LinkedHashSet.class,
                 TreeSet.class
-        };
+        );
     }
 
     @Override
@@ -69,7 +69,8 @@ public final class CollectionAdapter implements Adapter {
 
             // Add elements to collection
             for (@Nullable Object element : collection) {
-                context.write(element, element != null ? Config.builder(serializer, element.getClass()).build() : Config.builder().build());
+                @NotNull Config elementConfig = element != null ? Config.builder(serializer, element.getClass()).father(config.getFather()).build() : Config.builder().father(config.getFather()).build();
+                context.write(element, elementConfig);
             }
 
             // Finish
@@ -98,7 +99,7 @@ public final class CollectionAdapter implements Adapter {
                 for (@NotNull Class<?> type : config.getGenerics()) {
                     try {
                         // todo: function to retrieve type generic
-                        @Nullable Object object = array.readObject(type, Config.builder(serializer, type).build());
+                        @Nullable Object object = array.readObject(type, Config.builder(serializer, type).father(config.getFather()).build());
                         objects.add(object);
 
                         continue w;
