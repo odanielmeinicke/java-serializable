@@ -3,6 +3,7 @@ package codes.laivy.serializable.factory.context;
 import codes.laivy.serializable.Allocator;
 import codes.laivy.serializable.Serializer;
 import codes.laivy.serializable.adapter.Adapter;
+import codes.laivy.serializable.annotations.Parent;
 import codes.laivy.serializable.annotations.serializers.EnheritSerialization;
 import codes.laivy.serializable.annotations.serializers.MethodSerialization;
 import codes.laivy.serializable.config.Config;
@@ -126,6 +127,14 @@ public final class NativeContextFactory implements ContextFactory {
 
             if (field.getName().equals("this$0")) {
                 continue;
+            } else if (field.isAnnotationPresent(Parent.class)) {
+                if (father == null) {
+                    throw new IncompatibleReferenceException("The reference '" + reference + "' must be serialized from a field from a class: " + field.getType().getName());
+                } else if (!field.getType().isAssignableFrom(father.getInstance().getClass())) {
+                    throw new IncompatibleReferenceException("A field with @Parent annotation must have a type assignable with the object class being serialized!");
+                }
+
+                continue;
             }
 
             @Nullable Object value = Allocator.getFieldValue(field, object);
@@ -215,6 +224,17 @@ public final class NativeContextFactory implements ContextFactory {
 
                     if (field == null) {
                         throw new IncompatibleReferenceException("there's no field with name '" + name + "' at class '" + reference.getName() + "': " + config);
+                    } else if (field.isAnnotationPresent(Parent.class)) {
+                        @NotNull Class<?> type = field.getType();
+
+                        if (father == null) {
+                            throw new IncompatibleReferenceException("This class must be deserialized as a field from class: " + field.getType().getName());
+                        } else if (!type.isAssignableFrom(father.getInstance().getClass())) {
+                            throw new IncompatibleReferenceException("A field with @Parent annotation must have a type assignable with the object class being deserialized!");
+                        }
+
+                        // Set parent field to object instance
+                        Allocator.setFieldValue(field, instance, father.getInstance());
                     } else if (object.getContext(name).isNull()) {
                         // Set outer field instance
                         Allocator.setFieldValue(field, instance, null);
